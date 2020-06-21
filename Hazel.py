@@ -1,53 +1,90 @@
-import re
-import random
+# importing regex and random libraries
+import re, random
+from datetime import datetime
 
 class HazelBot:
-  negative_responses = ("nothing", "don't", "stop", "sorry")
-
+  # potential negative responses
+  negative_responses = ("no", "nope", "nah", "naw", "not a chance", "sorry")
+  # keywords for exiting the conversation
   exit_commands = ("quit", "pause", "exit", "goodbye", "bye", "later")
+  # random starter questions
+  random_questions = (
+        "Why are you here? ",
+        "Are there many humans like you? ",
+        "What do you consume for sustenance? ",
+        "Is there intelligent life on this planet? ",
+        "Does Earth have a leader? ",
+        "What planets have you visited? ",
+        "What technology do you have on this planet? "
+    )
 
   def __init__(self):
-    self.matching_phrases = {'say_name':[r'.*what.*(is)?.*your*.name.*\?',r'.*who.*are.*you\?.*']}
+    self.alienbabble = {'describe_planet_intent': r'.*\s*your planet.*',
+                        'answer_why_intent': r'.*why.*are.*you.*',
+                        'cubed_intent': r'.*cubed?.*(\d+)'
+                            }
 
-  def welcome(self):
-    self.name = input("Hi, I'm Hazel, your friendly chatbot! I'm a work-in-progess, but I'll do my best! First, let me ask: what is your first name and last name? ")
-    
-    will_help = input(f"Ok, {self.name}, it's nice to meet you! What can I help you with? ")
-    
+  # Define .greet() below:
+  def greet(self):
+    print("It is currently {}".format(datetime.now().strftime("%H:%M")))
+    self.name = input("What's your name?")
+    will_help = input("Hi {}, I\'m Etcetera. I\'m not from this planet. Will you help me learn about your planet?".format(self.name))
     if will_help in self.negative_responses:
-      print("Ok, have a great day!")
+      print("Ok, have a nice Earth day!")
       return
-    
-    self.handle_conversation(will_help)
-  
-  def handle_conversation(self, reply):
-    while not self.make_exit(reply):
-      reply = self.match_reply(reply)
-      
-  def make_exit(self, reply):
-    for exit_command in self.exit_commands:
-      if exit_command in reply:
-        print("Ok, have a great day!")
-        return True
-      
-    return False
-  
-  def match_reply(self, reply):
-    for key, values in self.matching_phrases.items():
-      for regex_pattern in values:
-        found_match = re.match(regex_pattern, reply.lower())
-        if found_match and key == 'say_name':
-            return self.say_name()
-        
-    return input("I did not understand you. Can you please ask your question again?")
-  
- 
-  def say_name(self):
-      return input("Hi, my name is Hazel! Anything else I can help you with?")
+    self.chat()
 
- 
-  
-# Create a SupportBot instance
+  # Define .make_exit() here:
+  def make_exit(self, reply):
+    for words in self.exit_commands:
+      if words in reply:
+        print("Ok, have a nice Earth day!")
+        return True
+    return False      
+
+  # Define .chat() next:
+  def chat(self):
+    reply = input(random.choice(self.random_questions)).lower()
+    while not(self.make_exit(reply)):
+      reply = input(self.match_reply(reply))
+
+  # Define .match_reply() below:
+  def match_reply(self, reply):
+    for intent, regex_pattern in self.alienbabble.items():
+      found_match = re.match(regex_pattern,reply)
+      if found_match and intent == 'describe_planet_intent':
+        return self.describe_planet_intent()
+      elif found_match and intent == 'answer_why_intent':
+        return self.answer_why_intent() 
+      elif found_match and intent == 'cubed_intent':
+        return self.cubed_intent(found_match.groups()[0])
+      else:
+        return self.no_match_intent()
+    
+
+  # Define .describe_planet_intent():
+  def describe_planet_intent(self):
+    responses = ["My planet is a utopia of diverse organisms and species. ","I am from Opidipus, the capital of the Wayward Galaxies. "]
+    return random.choice(responses)
+
+  # Define .answer_why_intent():
+  def answer_why_intent(self):
+    responses = ["I come in peace."
+"I am here to collect data on your planet and its inhabitants."
+"I heard the coffee is good."]
+    return random.choice(responses)
+       
+  # Define .cubed_intent():
+  def cubed_intent(self, number):
+    number = int(number)
+    cubed_number = number**3
+    return "The cube of {} is {}. Isn't that cool?".format(number,cubed_number)
+
+  # Define .no_match_intent():
+  def no_match_intent(self):
+    responses = ["Please tell me more.","Tell me more!","Why do you say that?","I see. Can you elaborate?","Interesting. Can you tell me more?", "I see. How do you think?","Why?","How do you think I feel when you say that?"]
+    return random.choice(responses)
+
+# Create an instance of AlienBot below:
 Hazel = HazelBot()
-# Call the .welcome() method
-Hazel.welcome()
+Hazel.greet()
