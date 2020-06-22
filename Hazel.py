@@ -9,35 +9,35 @@ class HazelBot:
     exit_commands = ("quit", "pause", "exit", "goodbye", "bye", "later")
     # random starter questions
     random_questions = (
-        "Why are you here? ",
-        "Are there many humans like you? ",
-        "What do you consume for sustenance? ",
-        "Is there intelligent life on this planet? ",
-        "Does Earth have a leader? ",
-        "What planets have you visited? ",
-        "What technology do you have on this planet? "
+        "How's it going? ",
+        "What're you up to? ",
+        "Anything interesting happen lately? ",
+        "Want to talk about something? ",
+        "What's up? ",
     )
 
     def __init__(self):
-        self.alienbabble = {'describe_creator_intent': r'.*\s*your creator.*',
+        self.alienbabble = {'describe_creator_intent': r'.*your creator.*',
                             'answer_why_intent': r'.*why.*are.*you.*',
                             'cubed_intent': r'.*cubed?.*(\d+)'
                                 }
         self.engine = pyttsx3.init()
         self.voices = self.engine.getProperty('voices') 
+        self.engine.setProperty('rate', self.engine.getProperty('rate')+5)
         self.engine.setProperty('voice', self.voices[1].id)
-
+        self.textFile =  open(r"testText.txt","a")
 
   # Define .greet() below:
     def greet(self):
-        print("It is currently {}".format(datetime.now().strftime("%H:%M")))
-        self.engine.say("It is currently {}".format(datetime.now().strftime("%H:%M")))
+        self.textFile.write("\n")
+        self.say("It is currently {}".format(datetime.now().strftime("%H:%M")))
    
-        self.name = self.ask("What's your name?")
-        will_help = self.ask("Hi {}, I\'m Etcetera. I\'m not from this planet. Will you help me learn about your planet?".format(self.name))
+        self.name = self.ask("Heya! It's nice to meet you. What's your name?")
+        will_help = self.ask("Hi {}, I\'m Hazel, a friendly chat bot! I'm slowly getting worked on. Could you spend some time with me?".format(self.name))
    
         if will_help in self.negative_responses:
-            self.say("Ok, have a nice Earth day!")
+            self.say("Ok, bye!")
+            self.textFile.close() 
             return
         self.chat()
             
@@ -45,13 +45,19 @@ class HazelBot:
     def ask(self, text):
         self.engine.say(text)
         print(text)
+        self.textFile.write("\n")
+        self.textFile.write(text)
         self.engine.runAndWait() 
         reply = input(">")
+        self.textFile.write("\n")
+        self.textFile.write(">" + reply)
         return reply
     
     def say(self, text):
         self.engine.say(text)
         print(text)
+        self.textFile.write("\n")
+        self.textFile.write(text)
         self.engine.runAndWait() 
        
 
@@ -60,7 +66,9 @@ class HazelBot:
         for words in self.exit_commands:
             if words in reply:
                 self.say("Ok, have a nice Earth day!")
+                self.textFile.close() 
                 return True
+                
             return False      
 
   # Define .chat() next:
@@ -73,19 +81,19 @@ class HazelBot:
     def match_reply(self, reply):
         for intent, regex_pattern in self.alienbabble.items():
             found_match = re.match(regex_pattern,reply)
-            if found_match and intent == 'describe_planet_intent':
-                return self.describe_planet_intent()
+            if found_match and intent == 'describe_creator_intent':
+                return self.describe_creator_intent()
             elif found_match and intent == 'answer_why_intent':
                 return self.answer_why_intent() 
             elif found_match and intent == 'cubed_intent':
                 return self.cubed_intent(found_match.groups()[0])
-            else:
-                return self.no_match_intent()
-        
 
+        return self.no_match_intent()
+        
+   
   # Define .describe_planet_intent():
-    def describe_planet_intent(self):
-        responses = ["My planet is a utopia of diverse organisms and species. ","I am from Opidipus, the capital of the Wayward Galaxies. "]
+    def describe_creator_intent(self):
+        responses = ["I'm a chatbot written up by a student for practice","My creator? I'm not really sure to be honest."]
         return random.choice(responses)
 
   # Define .answer_why_intent():
