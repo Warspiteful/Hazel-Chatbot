@@ -65,7 +65,7 @@ class HazelBot:
     def make_exit(self, reply):
         for words in self.exit_commands:
             if words in reply:
-                self.say("Ok, have a nice Earth day!")
+                self.say("Ok, bye!")
                 self.textFile.close() 
                 return True
                 
@@ -114,6 +114,3 @@ class HazelBot:
         responses = ["Please tell me more.","Tell me more!","Why do you say that?","I see. Can you elaborate?","Interesting. Can you tell me more?", "I see. How do you think?","Why?","How do you think I feel when you say that?"]
         return random.choice(responses)
 
-# Create an instance of AlienBot below:
-Hazel = HazelBot()
-Hazel.greet()
