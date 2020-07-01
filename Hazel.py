@@ -2,6 +2,7 @@
 import re, random, pyttsx3 
 from datetime import datetime
 
+
 class HazelBot:
     # potential negative responses
     negative_responses = ("no", "nope", "nah", "naw", "not a chance", "sorry")
@@ -26,6 +27,7 @@ class HazelBot:
         self.engine.setProperty('rate', self.engine.getProperty('rate')+5)
         self.engine.setProperty('voice', self.voices[1].id)
         self.textFile =  open(r"testText.txt","a")
+       
 
   # Define .greet() below:
     def greet(self):
