@@ -21,24 +21,30 @@ class GUI():
 
     def Build(self):
         self.root.title("Hazel")
-        self.root.geometry("400x500")
+        self.root.geometry("500x500")
         self.root.resizable(width=FALSE, height=FALSE)
  
         self.ChatLog['yscrollcommand'] = self.scrollbar.set
-        self.scrollbar.place(x=376,y=6, height=386)
-        self.ChatLog.place(x=6,y=6, height=386, width=370)
-        self.EntryBox.place(x=128, y=401, height=90, width=265)
-        self.SendButton.place(x=6, y=401, height=90)
+        self.scrollbar.place(x=476,y=6, height=486)
+        self.ChatLog.place(x=6,y=6, height=386, width=470)
+        self.EntryBox.place(x=228, y=401, height=90, width=365)
+        self.SendButton.place(x=6, y=401, height=90, width = 227)
         self.ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
     
     def Intro(self):
-        self.ChatLog.insert(END, "Bot: Heya! It's nice to meet you. What's your name? \n\n")
+        self.ChatLog.insert(END, "Hazel: Heya! It's nice to meet you. What's your name? \n\n")
         self.ChatLog.config(state=DISABLED)
 
+    def Start(self):
+        self.ChatLog.config(state=NORMAL)
+        self.ChatLog.insert(END, "Hazel: Well {}, I\'m Hazel, a friendly chat bot! \n\n".format(self.name))
+        self.ChatLog.insert(END,"Hazel: Could you spend some time with me?")
+        self.ChatLog.config(state=DISABLED)
     
     def parseResponse(self, msg, flag):
         if flag == 0:
             self.name = msg
+            self.flag += 1
             return "Oh, so your name is " + msg + "? That's awesome!"
         return ''
 
@@ -51,9 +57,11 @@ class GUI():
             self.ChatLog.insert(END, "You: " + msg + '\n\n')
             self.ChatLog.config(foreground="#442265", font=("Verdana", 12 ))
         res = self.parseResponse(msg, self.flag)
-        self.ChatLog.insert(END, "Bot: " + res + '\n\n')
+        self.ChatLog.insert(END, "Hazel: " + res + '\n\n')
         self.ChatLog.config(state=DISABLED)
         self.ChatLog.yview(END)
+        if self.flag == 1:
+            self.Start()
 
     
     
