@@ -67,17 +67,14 @@ class HazelBot:
     def make_exit(self, reply):
         for words in self.exit_commands:
             if words in reply:
-                self.say("Ok, bye!")
-                self.textFile.close() 
-                return True
-                
+                return True        
             return False      
 
   # Define .chat() next:
     def chat(self):
-        reply = self.ask(random.choice(self.random_questions)).lower()
-        while not(self.make_exit(reply)):
-            reply = self.ask(self.match_reply(reply))
+        return random.choice(self.random_questions)
+        #while not(self.make_exit(reply)):
+         #   reply = self.ask(self.match_reply(reply))
 
   # Define .match_reply() below:
     def match_reply(self, reply):
