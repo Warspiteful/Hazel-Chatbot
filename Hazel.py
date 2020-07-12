@@ -1,5 +1,5 @@
 # importing regex and random libraries
-import re, random, pyttsx3 
+import re, random
 from datetime import datetime
 
 
